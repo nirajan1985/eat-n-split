@@ -22,11 +22,18 @@ const initialFriends = [
 ];
 export default function App() {
   const [showAddFriend, setShowAddFriend] = useState(false);
+  const [friends, setFriends] = useState(initialFriends);
+
   return (
     <div className="app">
       <div className="sidebar">
-        <FriendList />
-        {showAddFriend && <FormAddFriend />}
+        <FriendList friends={friends} />
+        {showAddFriend && (
+          <FormAddFriend
+            setFriends={setFriends}
+            setShowAddFriend={setShowAddFriend}
+          />
+        )}
         <Button handleToggle={() => setShowAddFriend(!showAddFriend)}>
           {showAddFriend ? "Close" : "Add friend"}
         </Button>
@@ -35,10 +42,10 @@ export default function App() {
     </div>
   );
 }
-function FriendList() {
+function FriendList({ friends }) {
   return (
     <ul>
-      {initialFriends.map((friend) => (
+      {friends.map((friend) => (
         <Friend friend={friend} key={friend.id} />
       ))}
     </ul>
@@ -71,7 +78,7 @@ function Button({ children, handleToggle }) {
     </button>
   );
 }
-function FormAddFriend() {
+function FormAddFriend({ setFriends, setShowAddFriend }) {
   const [name, setName] = useState("");
   const [image, setImage] = useState("https://i.pravatar.cc/48");
 
@@ -83,6 +90,9 @@ function FormAddFriend() {
     const id = crypto.randomUUID();
     const newFriend = { id, name, image: `${image}?=${id}`, balance: 0 };
     console.log(newFriend);
+    setFriends((friends) => [...friends, newFriend]);
+
+    setShowAddFriend(false);
 
     setName("");
     setImage("https://i.pravatar.cc/48");
