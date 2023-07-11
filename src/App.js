@@ -3,19 +3,19 @@ import { useState } from "react";
 const initialFriends = [
   {
     id: 118836,
-    name: "Clark",
+    name: "Arne",
     image: "https://i.pravatar.cc/48?u=118836",
     balance: -7,
   },
   {
     id: 933372,
-    name: "Sarah",
+    name: "Tiril",
     image: "https://i.pravatar.cc/48?u=933372",
     balance: 20,
   },
   {
     id: 499476,
-    name: "Anthony",
+    name: "Anders",
     image: "https://i.pravatar.cc/48?u=499476",
     balance: 0,
   },
@@ -24,6 +24,10 @@ export default function App() {
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [friends, setFriends] = useState(initialFriends);
   const [selectedFriend, setSelectedFriend] = useState(null);
+
+  function handleShowAddFriend() {
+    setShowAddFriend((showAddFriend) => !showAddFriend);
+  }
 
   function handleSelection(friend) {
     setSelectedFriend(selectedFriend?.id === friend.id ? null : friend);
@@ -55,7 +59,7 @@ export default function App() {
             setShowAddFriend={setShowAddFriend}
           />
         )}
-        <Button onClick={() => setShowAddFriend(!showAddFriend)}>
+        <Button onClick={handleShowAddFriend}>
           {showAddFriend ? "Close" : "Add friend"}
         </Button>
       </div>
@@ -78,7 +82,7 @@ function Button({ children, onClick }) {
 }
 function FriendList({
   friends,
-
+  setSelectedFriend,
   selectedFriend,
   onSelection,
 }) {
@@ -90,12 +94,13 @@ function FriendList({
           key={friend.id}
           selectedFriend={selectedFriend}
           onSelection={onSelection}
+          setSelectedFriend={setSelectedFriend}
         />
       ))}
     </ul>
   );
 }
-function Friend({ friend, onSelection, selectedFriend }) {
+function Friend({ friend, onSelection, selectedFriend, setSelectedFriend }) {
   const isSelected = friend.id === selectedFriend?.id;
   return (
     <li className={isSelected ? "selected" : ""}>
@@ -103,12 +108,12 @@ function Friend({ friend, onSelection, selectedFriend }) {
       <h3>{friend.name}</h3>
       {friend.balance < 0 && (
         <p className="red">
-          You owe {friend.name} {Math.abs(friend.balance)}£
+          You owe {friend.name} {Math.abs(friend.balance)} kroner
         </p>
       )}
       {friend.balance > 0 && (
         <p className="green">
-          {friend.name} owes you {friend.balance}£
+          {friend.name} owes you {friend.balance} kroner
         </p>
       )}
       {friend.balance === 0 && <p>You and {friend.name} are even</p>}
